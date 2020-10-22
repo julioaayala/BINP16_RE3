@@ -80,7 +80,7 @@ Ychr_dict = fasta_to_dict('y_chromosome.fasta')
 
 # Running the MSA for the mtdna
 with open('MSAmtdna.txt', 'w') as output_file:
-    output_file.write('SampleA\tSampleB\tIdentity_score\tAlignment_score\n')
+    output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
     for i, (key_1, seq_1) in enumerate(mtdna_dict.items()): # Get and index, and items from dict.
         for j, (key_2, seq_2) in enumerate(mtdna_dict.items()):
             if i < j: # Compare with non-repeating sequences
@@ -90,7 +90,7 @@ with open('MSAmtdna.txt', 'w') as output_file:
 
 # Running the MSA for the Y chromosome
 with open('MSAYchr.txt', 'w') as output_file:
-    output_file.write('SampleA\tSampleB\tIdentity_score\tAlignment_score\n')
+    output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
     for i, (key_1, seq_1) in enumerate(Ychr_dict.items()): # Get and index, and items from dict.
         for j, (key_2, seq_2) in enumerate(Ychr_dict.items()):
             if i < j: # Compare with non-repeating sequences

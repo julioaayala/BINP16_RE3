@@ -18,6 +18,14 @@ Arguments:
 
 
 # First, we define a function to calculate the alignment score for a pair of sequences:
+
+import sys
+# sys.argv[0] is the script file
+# sys.argv[1] is the input file
+# sys.argv[2] is the weight file
+# sys.argv[3] is the output file
+
+
 def score_alignment_identity(seq_1, seq_2, weights):
     '''Function to score an alignment of two sequences
     Arguments:  seq_1, seq_2 (str): sequences, including gaps.
@@ -69,31 +77,34 @@ def fasta_to_dict(fasta_file):
 
 # Dictionary for weights file
 weights = {}
-with open('weights.txt', 'r') as weight_file: # Open a weights file and
+with open(sys.argv[2], 'r') as weight_file: # Open a weights file and
     for line in weight_file:
         line = line.split()
         weights[line[0]] = int(line[1])
 
+
 # Converting fasta files to dictionaries
-mtdna_dict = fasta_to_dict('mtdna.fasta')
-Ychr_dict = fasta_to_dict('y_chromosome.fasta')
+fasta_dict = fasta_to_dict(sys.argv[1])
+# Ychr_dict = fasta_to_dict('y_chromosome.fasta')
 
 # Running the MSA for the mtdna
-with open('MSAmtdna.txt', 'w') as output_file:
+
+with open(sys.argv[3], 'w') as output_file:
     output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
-    for i, (key_1, seq_1) in enumerate(mtdna_dict.items()): # Get and index, and items from dict.
-        for j, (key_2, seq_2) in enumerate(mtdna_dict.items()):
+    for i, (key_1, seq_1) in enumerate(fasta_dict.items()): # Get and index, and items from dict.
+        for j, (key_2, seq_2) in enumerate(fasta_dict.items()):
             if i < j: # Compare with non-repeating sequences
                 # Calculate scores and add to file
                 iden, score_seq = score_alignment_identity(seq_1, seq_2, weights)
                 output_file.writelines('{}\t{}\t{}%\t{}\n'.format(key_1, key_2, iden, score_seq))
 
-# Running the MSA for the Y chromosome
-with open('MSAYchr.txt', 'w') as output_file:
-    output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
-    for i, (key_1, seq_1) in enumerate(Ychr_dict.items()): # Get and index, and items from dict.
-        for j, (key_2, seq_2) in enumerate(Ychr_dict.items()):
-            if i < j: # Compare with non-repeating sequences
-                # Calculate scores and add to file
-                iden, score_seq = score_alignment_identity(seq_1, seq_2, weights)
-                output_file.writelines('{}\t{}\t{}%\t{}\n'.format(key_1, key_2, iden, score_seq))
+# # Running the MSA for the Y chromosome
+# with open('MSAYchr.txt', 'w') as output_file:
+#     output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
+#     for i, (key_1, seq_1) in enumerate(Ychr_dict.items()): # Get and index, and items from dict.
+#         for j, (key_2, seq_2) in enumerate(Ychr_dict.items()):
+#             if i < j: # Compare with non-repeating sequences
+#                 # Calculate scores and add to file
+#                 iden, score_seq = score_alignment_identity(seq_1, seq_2, weights)
+#                 output_file.writelines('{}\t{}\t{}%\t{}\n'.format(key_1, key_2, iden, score_seq))
+print("DONE")

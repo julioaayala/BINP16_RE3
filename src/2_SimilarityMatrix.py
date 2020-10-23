@@ -10,9 +10,16 @@ Arguments:
 
 '''
 
+import sys
+# sys.argv[0] is the script file
+# sys.argv[1] is the input file
+# sys.argv[2] is the output file1 (Identity)
+# sys.argv[3] is the output file2 (Score)
+
 def msa_to_dict(input_file):
     msa_matrix_identity = {}
     msa_matrix_score = {}
+    list_of_scores = []
     with open(input_file, 'r') as msa_file:
         header = next(msa_file)
         for line in msa_file:
@@ -28,11 +35,23 @@ def msa_to_dict(input_file):
             msa_matrix_identity[line[1]][line[0]] = line[2].replace('%', '')
             msa_matrix_score[line[0]][line[1]] = line[3] # Add the value to both dictionaries
             msa_matrix_score[line[1]][line[0]] = line[3]
+            list_of_scores.append(int(line[3]))
+            
 
+    min_val = min(list_of_scores)
+    max_val = max(list_of_scores)
+    for key1 in msa_matrix_score:
+        for key2 in msa_matrix_score[key1]:
+            if msa_matrix_score[key1][key2] != '-':
+                current_value = float(msa_matrix_score[key1][key2]) #Normalized value
+                msa_matrix_score[key1][key2] = round(100*(current_value + abs(min_val))/(max_val + abs(min_val)), 1)
+            else:
+                msa_matrix_score[key1][key2] = 100
     return msa_matrix_identity, msa_matrix_score
 
 
 def make_matrix_file(msa_matrix, output_file):
+    
     with open(output_file, 'w') as output_matrix:
         header = sorted(msa_matrix.keys())
         header_str = '\t' + '\t'.join(header)
@@ -40,7 +59,7 @@ def make_matrix_file(msa_matrix, output_file):
         for key1 in sorted(msa_matrix.keys()):
             output_matrix.write(key1)
             for key2 in sorted(msa_matrix[key1]):
-                output_matrix.write('\t' + msa_matrix[key1][key2])
+                output_matrix.write('\t' + str(msa_matrix[key1][key2]))
             output_matrix.write('\n')
 
 def get_most_similar(msa_dict, name):
@@ -53,19 +72,19 @@ def get_most_similar(msa_dict, name):
                 max_key = key
     return max_key, max_value
 
-identity_ychr, score_ychr = msa_to_dict('MSAYchr.txt')
-identity_mtdna, score_mtdna = msa_to_dict('MSAmtdna.txt')
+identity, score = msa_to_dict(sys.argv[1])
+# identity_mtdna, score_mtdna = msa_to_dict('MSAmtdna.txt')
 
-make_matrix_file(identity_ychr, 'output_id_ychr.txt')
-make_matrix_file(score_ychr, 'output_score_ychr.txt')
-make_matrix_file(identity_mtdna, 'output_id_mtdna.txt')
-make_matrix_file(score_mtdna, 'output_score_mtdna.txt')
+make_matrix_file(identity, sys.argv[2])
+make_matrix_file(score, sys.argv[3])
+# make_matrix_file(identity_mtdna, 'output_id_mtdna.txt')
+# make_matrix_file(score_mtdna, 'output_score_mtdna.txt')
+
 
 name = input('Please enter one of the characters in the story: ')
 
-while name not in identity_ychr:
+while name not in identity:
     name = input('The name is not in the list. Please enter one of the characters in the story: ')
 
-max_name, max_score = get_most_similar(identity_ychr, name)
-print('{} is the most similar to {} with a score of {}'.format(name, max_name, max_score))
-
+max_name, max_score = get_most_similar(identity, name)
+print('{} is the most similar (identity) to {} with a score of {}'.format(name, max_name, max_score))

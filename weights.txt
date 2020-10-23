@@ -1,4 +1,0 @@
-match	1
-transition	-1
-transversion	-2
-gap	-1

@@ -72,8 +72,11 @@ def get_most_similar(msa_dict, name):
                 max_key = key
     return max_key, max_value
 
+
 identity, score = msa_to_dict(sys.argv[1])
 # identity_mtdna, score_mtdna = msa_to_dict('MSAmtdna.txt')
+
+
 
 make_matrix_file(identity, sys.argv[2])
 make_matrix_file(score, sys.argv[3])
@@ -81,10 +84,3 @@ make_matrix_file(score, sys.argv[3])
 # make_matrix_file(score_mtdna, 'output_score_mtdna.txt')
 
 
-name = input('Please enter one of the characters in the story: ')
-
-while name not in identity:
-    name = input('The name is not in the list. Please enter one of the characters in the story: ')
-
-max_name, max_score = get_most_similar(identity, name)
-print('{} is the most similar (identity) to {} with a score of {}'.format(name, max_name, max_score))

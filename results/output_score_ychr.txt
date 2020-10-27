@@ -1,0 +1,7 @@
+	Alexei_Romanov_Y	Anastasia4_son_Y	Farmer’s_grandson_Y	Grigori_Rasputin_Y	Nicolhas_II_Romanov_Y	Prince_Fred_Y
+Alexei_Romanov_Y	100	1.2	29.1	30.2	60.5	12.8
+Anastasia4_son_Y	1.2	100	4.7	0.0	11.6	7.0
+Farmer’s_grandson_Y	29.1	4.7	100	100.0	25.6	25.6
+Grigori_Rasputin_Y	30.2	0.0	100.0	100	23.3	20.9
+Nicolhas_II_Romanov_Y	60.5	11.6	25.6	23.3	100	7.0
+Prince_Fred_Y	12.8	7.0	25.6	20.9	7.0	100

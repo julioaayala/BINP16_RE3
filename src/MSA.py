@@ -1,110 +1,92 @@
 #!/usr/bin/python3
+
 '''
 MSA.py
-Multiple Sequence Alignment
-Date: 2020-10-21
-Authors: Pinar Oncel, Mara Vizitiu, Julio Ayala
-Description: Script to calculate the pairwise alignment score and the identity score for each pair of sequences in a file.
-Usage: python MSA.py fasta_file weight_parameters output_file
-Arguments:
-    - fasta_file: Input file in the fasta_format containing aligned sequences.
-    - weight_parameters: File with weights for the scoring of alignments. Weight type and value should be separated by a tab in one line. e.g.:
-        match   1
-        transition  -1
-        transversion    -2
-        gap -1
-    - output_file: File with the sequence pairs with their respective identity and alignment score.
+identity and alignment scores
+Date : 2020-10-21
+Authors : Julio Ayala, Mara Vizitiu, Pinar Oncel
+
+Description : this is a script to calculate identity and alignment scores for each pair of sequences in a given fasta file
+
+Usage1 : mitochondrial DNA sequences : python3 MSA.py ../data/mtdna_orig.fasta ../data/weights.txt ../results/MSAmtdna.txt
+Usage2 : Y chromosome sequences :      python3 MSA.py ../data/y_chromosome_orig.fasta ../data/weights.txt ../results/MSAYchr.txt
+
+Arguments :
+- mtdna_orig.fasta :        an input file in fasta format containing aligned mitochondrial DNA sequences
+- y_chromosome_orig.fasta : an input file in fasta format containing aligned Y chromosome sequences
+- weights.txt :             a reference file with weights used for alignment scoring
+weight types and weight values are separated by a tab in one line : (1)match:1 (2)transition:-1 (3)transversion:-2 (4)gap:-1
+- MSAmtdna.txt :            an output file including pairs of sequences and their respective identity scores
+- MSAYchr.txt :             an output file including pairs of sequences and their respective alignment scores
 '''
 
-
-# First, we define a function to calculate the alignment score for a pair of sequences:
-
 import sys
-# sys.argv[0] is the script file
-# sys.argv[1] is the input file
-# sys.argv[2] is the weight file
-# sys.argv[3] is the output file
-
 
 def score_alignment_identity(seq_1, seq_2, weights):
-    '''Function to score an alignment of two sequences
-    Arguments:  seq_1, seq_2 (str): sequences, including gaps.
-                weights (dict): scores for each case.
-    Returns: score and identity of the alignment (tuple)
     '''
-    nucleotides = ['A', 'T', 'G', 'C', '?', '-'] # list of all nucleotides
-    purines = ['A', 'G']                        # list of purine nucleotides
-    pyrimidines = ['T', 'C']                    # list of pyrimidine nucleotides
+    this is a function to score an alignment of a pair of sequences
+    Arguments :  seq_1, seq_2 (str) : two aligned sequences including gaps
+                 weights (dict) : scores for reference
+    Returns : identity and alignment scores (tuple)
+    '''
+    nucleotides = ['A', 'T', 'G', 'C', '?', '-']      # list of all nucleotides
+    purines = ['A', 'G']                              # list of purine nucleotides
+    pyrimidines = ['T', 'C']                          # list of pyrimidine nucleotides
 
-    score = 0 #Variable to store the score
-    identical = 0 #Variable to store the identical nucleotides
+    score = 0                                         # variable to store score
+    identical = 0                                     # variable to store identical nucleotides
+
+    # how to calculate pairwise alignment score
     for i in range(len(seq_1)):
-        # Add to the score given the different cases
-        if (seq_1[i] == seq_2[i]):
-            if (seq_1[i] == '-' or seq_1[i] == '?'): #When both are gaps, exclude
+        if (seq_1[i] == seq_2[i]):                    # when they are same
+            if (seq_1[i] == '-' or seq_1[i] == '?'):  # when they are gaps
                 pass
-            else:
+            else:                                     # when its a match
                 score += weights['match']
                 identical += 1
         elif (seq_1[i] in purines and seq_2[i] in purines) or (seq_1[i] in pyrimidines and seq_2[i] in pyrimidines):
-            score += weights['transition']
-        elif (seq_1[i] == '-' or seq_2[i] == '-'):
+            score += weights['transition']            # when its a transition
+        elif (seq_1[i] == '-' or seq_2[i] == '-'):    # when theres a gap
             score += weights['gap']
-        elif (seq_1[i] == '?' or seq_2[i] == '?'): #When one of the nucleotides is
+        elif (seq_1[i] == '?' or seq_2[i] == '?'):    # when one is unknown
             pass
-        else:
+        else:                                         # when its a transversion
             score += weights['transversion']
+    # how to calculate pairwise identity score
+    identity = round(100 * identical / len(seq_1), 1) # divide nr of identical by length
+    return identity, score                            # return score and identity as a tuple
 
-    identity = round(100 * identical / len(seq_1), 1) # Calculate the identity by dividing identical/length
-    return identity, score # Return score and identity as a tuple
-
-# Lastly, we define a function to build a dictionary from a fasta file:
-# keys = identity of person and values = DNA sequence
 def fasta_to_dict(fasta_file):
-    '''Function to convert a fasta file into a dictionary
-    Arguments: fasta_file, file with fasta sequences, where the header delimiter is >
-    Returns: dictionary with ids as keys, and sequences as values
     '''
-    sequences = {}
-    # Retrieve sequences from the fasta file
+    this is a function to convert a fasta file into a dictionary
+    Arguments : fasta_file : file with fasta sequences, where the header delimiter is a tab
+    Returns : dictionary with sequence IDs as keys, and sequences as values
+    '''
+    sequences = {} # set up an empty dictionary to store sequence ID and sequence
+
+    # how to retrieve sequences from the fasta file
     with open(fasta_file, 'r') as fasta:
         for line in fasta:
-            if line.startswith('>'): # Get the id from the header and add it to sequence dict
+            if line.startswith('>'): # get ID and sequence and add to dictionary
                 header = line.strip()[1:]
                 sequences[header] = next(fasta).upper().strip()
     return sequences
 
+weights = {} # set up an empty dictionary to store weight type and value
 
-# Dictionary for weights file
-weights = {}
-with open(sys.argv[2], 'r') as weight_file: # Open a weights file and
+# how to build a dictionary from reference file
+with open(sys.argv[2], 'r') as weight_file:
     for line in weight_file:
         line = line.split()
-        weights[line[0]] = int(line[1])
+        weights[line[0]] = int(line[1]) # add weight type and values to dictionary
 
-
-# Converting fasta files to dictionaries
-fasta_dict = fasta_to_dict(sys.argv[1])
-# Ychr_dict = fasta_to_dict('y_chromosome.fasta')
-
-# Running the MSA for the mtdna
+fasta_dict = fasta_to_dict(sys.argv[1]) # convert fasta to dictionary using function
 
 with open(sys.argv[3], 'w') as output_file:
-    output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
-    for i, (key_1, seq_1) in enumerate(fasta_dict.items()): # Get and index, and items from dict.
-        for j, (key_2, seq_2) in enumerate(fasta_dict.items()):
-            if i < j: # Compare with non-repeating sequences
-                # Calculate scores and add to file
-                iden, score_seq = score_alignment_identity(seq_1, seq_2, weights)
-                output_file.writelines('{}\t{}\t{}%\t{}\n'.format(key_1, key_2, iden, score_seq))
-
-# # Running the MSA for the Y chromosome
-# with open('MSAYchr.txt', 'w') as output_file:
-#     output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')
-#     for i, (key_1, seq_1) in enumerate(Ychr_dict.items()): # Get and index, and items from dict.
-#         for j, (key_2, seq_2) in enumerate(Ychr_dict.items()):
-#             if i < j: # Compare with non-repeating sequences
-#                 # Calculate scores and add to file
-#                 iden, score_seq = score_alignment_identity(seq_1, seq_2, weights)
-#                 output_file.writelines('{}\t{}\t{}%\t{}\n'.format(key_1, key_2, iden, score_seq))
-print("DONE")
+    output_file.write('SmpA\tSmpB\tId_s\tAl_s\n')               # write out header row
+    for i, (key_1, seq_1) in enumerate(fasta_dict.items()):     # get ID and seq from dictionary
+        for j, (key_2, seq_2) in enumerate(fasta_dict.items()): # get ID and seq from dictionary
+            if i < j:                                           # compare two non-repeating sequences
+                iden, score_seq = score_alignment_identity(seq_1, seq_2, weights) # get identity and alignment scores
+                output_file.write('{}\t{}\t{}%\t{}\n'.format(key_1, key_2, iden, score_seq)) # write out data
+print('DONE')

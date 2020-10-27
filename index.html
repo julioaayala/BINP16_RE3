@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Running Exercise 3</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Desktop</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14259,7 +14259,7 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Running-Exercise-3:-Solving-the-Anastasia-Romanov-mystery">Running Exercise 3: Solving the Anastasia Romanov mystery<a class="anchor-link" href="#Running-Exercise-3:-Solving-the-Anastasia-Romanov-mystery">&#182;</a></h1><h4 id="Ayala,-J.-Pinar-&#214;ncel,-Mara-Vizitiu">Ayala, J. Pinar &#214;ncel, Mara Vizitiu<a class="anchor-link" href="#Ayala,-J.-Pinar-&#214;ncel,-Mara-Vizitiu">&#182;</a></h4><h4 id="Lund-University,-BINP16:-Programming-in-Python">Lund University, BINP16: Programming in Python<a class="anchor-link" href="#Lund-University,-BINP16:-Programming-in-Python">&#182;</a></h4>
+<h1 id="Running-Exercise-3:-Solving-the-Anastasia-Romanov-mystery">Running Exercise 3: Solving the Anastasia Romanov mystery<a class="anchor-link" href="#Running-Exercise-3:-Solving-the-Anastasia-Romanov-mystery">&#182;</a></h1><h4 id="Ayala,-J.;-Vizitiu,-M.;-&#214;ncel,-P.">Ayala, J.; Vizitiu, M.; &#214;ncel, P.<a class="anchor-link" href="#Ayala,-J.;-Vizitiu,-M.;-&#214;ncel,-P.">&#182;</a></h4><h4 id="Lund-University,-BINP16:-Programming-in-Python-(Created-on:-27-10-2020)">Lund University, BINP16: Programming in Python (Created on: 27-10-2020)<a class="anchor-link" href="#Lund-University,-BINP16:-Programming-in-Python-(Created-on:-27-10-2020)">&#182;</a></h4>
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
@@ -14281,8 +14281,12 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>We received a file containing genetic data from different people, including members of the royal family, people who claim to be Anastasia (or her son in one case), the farmer's grandson, and Rasputin. For some individuals there is a mtDNA sequence or a Y chromosome sequence, in some cases there is data for both. We manually created two files in fasta format, one with mtDNA sequences, and one with Y chromosome sequences. These two files are the source for the rest of the analysis.</p>
-<p>The analysis consists of three parts: The first part calculates identity and scores for each sequence combination, the second part converts it into a matrix format, and the final part creates clusters and plots them in a dendrogram format.</p>
+<h3 id="Part-I:-Calculate-all-sequence-combinations-identity-and-raw-scores.">Part I: Calculate all sequence combinations identity and raw scores.<a class="anchor-link" href="#Part-I:-Calculate-all-sequence-combinations-identity-and-raw-scores.">&#182;</a></h3>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>We began our analysis by looking at the collected DNA samples and performing multiple sequence alignments. We received two sets of DNA data to work with: (1) mtdna_orig.fasta: sequences of mitochondrial DNA that were used to establish maternal relationship between the samples, and (2) y_chromosome_orig.fasta: sequences of Y chromosome that were used to establish paternal relationship between the samples.</p>
 
 </div>
 </div>
@@ -14319,48 +14323,18 @@ a.anchor-link {
 </div>
 </div>
 
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Part-I:-Calculate-all-sequence-combinations-identity-and-raw-scores.">Part I: Calculate all sequence combinations identity and raw scores.<a class="anchor-link" href="#Part-I:-Calculate-all-sequence-combinations-identity-and-raw-scores.">&#182;</a></h3>
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">score_alignment_identity</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Function to score an alignment of two sequences</span>
-<span class="sd">    Arguments:  seq_1, seq_2 (str): sequences, including gaps.</span>
-<span class="sd">                weights (dict): scores for each case.</span>
-<span class="sd">    Returns: score and identity of the alignment (tuple)</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">nucleotides</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]</span> <span class="c1"># list of all nucleotides</span>
-    <span class="n">purines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">]</span>                        <span class="c1"># list of purine nucleotides</span>
-    <span class="n">pyrimidines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]</span>                    <span class="c1"># list of pyrimidine nucleotides</span>
-
-    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#Variable to store the score</span>
-    <span class="n">identical</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#Variable to store the identical nucleotides</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_1</span><span class="p">)):</span>
-        <span class="c1"># Add to the score given the different cases</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">):</span> <span class="c1">#When both are gaps, exclude</span>
-                <span class="k">pass</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]</span>
-                <span class="n">identical</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">purines</span> <span class="ow">and</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">purines</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pyrimidines</span> <span class="ow">and</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pyrimidines</span><span class="p">):</span>
-            <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;transition&#39;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">):</span>
-            <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;gap&#39;</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span> <span class="ow">or</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">):</span> <span class="c1">#When one of the nucleotides is</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;transversion&#39;</span><span class="p">]</span>
-
-    <span class="n">identity</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">identical</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># Calculate the identity by dividing identical/length</span>
-    <span class="k">return</span> <span class="n">identity</span><span class="p">,</span> <span class="n">score</span> <span class="c1"># Return score and identity as a tuple</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mtdna_contents</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mtdna_fasta</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mtdna_file</span><span class="p">:</span>
+    <span class="n">mtdna_contents</span> <span class="o">=</span> <span class="n">mtdna_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">ychr_contents</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ychr_fasta</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ychr_file</span><span class="p">:</span>
+    <span class="n">ychr_contents</span> <span class="o">=</span> <span class="n">ychr_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -14368,6 +14342,12 @@ a.anchor-link {
 </div>
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>We started by looking at the DNA samples in a pairwise fashion, calculating the identity and alignment scores for each aligned pair. At this step, our script contained two user-defined functions: (1)  score_alignment_identity(): a function that calculates the identity and alignment scores for a given pair of sequences (2) fasta_to_dict(): a function that converts a fasta file into a dictionary where the sequence IDs are stored as keys and the sequences are stored as values. The identity and alignment scores for each of the sequence pairs in the dictionary were written out two output files: (1) MSAmtdna.txt: containing the scores for the mitochondrial DNA samples  (2) MSAYchr.txt: containing the scores for the Y chromosomal samples.</p>
+
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
@@ -14375,15 +14355,17 @@ a.anchor-link {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">fasta_to_dict</span><span class="p">(</span><span class="n">fasta_file</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Function to convert a fasta file into a dictionary</span>
-<span class="sd">    Arguments: fasta_file, file with fasta sequences, where the header delimiter is &gt;</span>
-<span class="sd">    Returns: dictionary with ids as keys, and sequences as values</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    this is a function to convert a fasta file into a dictionary</span>
+<span class="sd">    Arguments : fasta_file : file with fasta sequences, where the header delimiter is a tab</span>
+<span class="sd">    Returns : dictionary with sequence IDs as keys, and sequences as values</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">sequences</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="c1"># Retrieve sequences from the fasta file</span>
+    <span class="n">sequences</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># set up an empty dictionary to store sequence ID and sequence</span>
+
+    <span class="c1"># how to retrieve sequences from the fasta file</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fasta_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fasta</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">fasta</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">):</span> <span class="c1"># Get the id from the header and add it to sequence dict</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">):</span> <span class="c1"># get ID and sequence and add to dictionary</span>
                 <span class="n">header</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
                 <span class="n">sequences</span><span class="p">[</span><span class="n">header</span><span class="p">]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">fasta</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">sequences</span>
@@ -14394,24 +14376,64 @@ a.anchor-link {
 </div>
 </div>
 
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Create the weights using an input file</p>
-
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">score_alignment_identity</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    this is a function to score an alignment of a pair of sequences</span>
+<span class="sd">    Arguments :  seq_1, seq_2 (str) : two aligned sequences including gaps</span>
+<span class="sd">                 weights (dict) : scores for reference</span>
+<span class="sd">    Returns : identity and alignment scores (tuple)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">nucleotides</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]</span>      <span class="c1"># list of all nucleotides</span>
+    <span class="n">purines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">]</span>                              <span class="c1"># list of purine nucleotides</span>
+    <span class="n">pyrimidines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]</span>                          <span class="c1"># list of pyrimidine nucleotides</span>
+
+    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>                                         <span class="c1"># variable to store score</span>
+    <span class="n">identical</span> <span class="o">=</span> <span class="mi">0</span>                                     <span class="c1"># variable to store identical nucleotides</span>
+
+    <span class="c1"># how to calculate pairwise alignment score</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq_1</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>                    <span class="c1"># when they are same</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">):</span>  <span class="c1"># when they are gaps</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>                                     <span class="c1"># when its a match</span>
+                <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;match&#39;</span><span class="p">]</span>
+                <span class="n">identical</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">purines</span> <span class="ow">and</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">purines</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pyrimidines</span> <span class="ow">and</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">pyrimidines</span><span class="p">):</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;transition&#39;</span><span class="p">]</span>            <span class="c1"># when its a transition</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">):</span>    <span class="c1"># when theres a gap</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;gap&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">seq_1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span> <span class="ow">or</span> <span class="n">seq_2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;?&#39;</span><span class="p">):</span>    <span class="c1"># when one is unknown</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>                                         <span class="c1"># when its a transversion</span>
+            <span class="n">score</span> <span class="o">+=</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;transversion&#39;</span><span class="p">]</span>
+    <span class="c1"># how to calculate pairwise identity score</span>
+    <span class="n">identity</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">identical</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq_1</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># divide nr of identical by length</span>
+    <span class="k">return</span> <span class="n">identity</span><span class="p">,</span> <span class="n">score</span>                            <span class="c1"># return score and identity as a tuple</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Dictionary for weights file</span>
-<span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># set up an empty dictionary to store weight type and value</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">weights_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">weight_file</span><span class="p">:</span> <span class="c1"># Open a weights file and</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">weight_file</span><span class="p">:</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="n">weights</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">weights</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># add weight type and values to dictionary</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
 </pre></div>
 
@@ -14441,15 +14463,10 @@ a.anchor-link {
 
 </div>
 
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Parsing-the-sequence-files">Parsing the sequence files<a class="anchor-link" href="#Parsing-the-sequence-files">&#182;</a></h4>
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Converting fasta files to dictionaries</span>
@@ -14462,100 +14479,6 @@ a.anchor-link {
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fasta_dict_mtdna</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{&#39;Princess_Irene&#39;: &#39;ACC??TAGCTAGCTAGCATAGCTAGC&#39;,
- &#39;Prince_Fred&#39;: &#39;AGGGAT??CTAGCTAGCATAGCTAGC&#39;,
- &#39;Nicholas_II_Romanov&#39;: &#39;-----GGGG-----AAA---------&#39;,
- &#39;Alexandra_Romanov&#39;: &#39;AC---A----A---AGCA---?TA?C&#39;,
- &#39;Olga_Romanov&#39;: &#39;AGGG???---AGCTA--ATAG?TAGC&#39;,
- &#39;Tatiana_Romanov&#39;: &#39;AGG-------A------------AGC&#39;,
- &#39;Maria_Romanov&#39;: &#39;ACC--TAGCT???TAGCAT?GCT---&#39;,
- &#39;Alexei_Romanov&#39;: &#39;ACC???AGCTAGCT----TAGCTTTT&#39;,
- &#39;Suspected_Anastasia&#39;: &#39;??CAGAGACTCTC???CAAAGCTAGC&#39;,
- &#39;Anastasia1&#39;: &#39;ACTGTACGCCA??TAAGCA?G??A?C&#39;,
- &#39;Anastasia2&#39;: &#39;AGGG???GCT???TA????AGGGGAC&#39;,
- &#39;Anastasia3&#39;: &#39;ACC???AGC????GGGCATA??AATT&#39;,
- &#39;Anastasia4_son&#39;: &#39;AACAGAGACTAAA???CAAAGCTAGC&#39;,
- &#39;Anastasia5&#39;: &#39;???AGAGACT??CTCTCAAAGCT---&#39;,
- &#34;Farmer&#39;s_grandson&#34;: &#39;ACCAA??GCTAA?TAGCAT-GCT--G&#39;,
- &#39;Grigori_Rasputin&#39;: &#39;AAAAAGGGGGGGGGCCCCCTATATAT&#39;}</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fasta_dict_ychr</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{&#39;Prince_Fred_Y&#39;: &#39;AGCCTAGCTCGCGCGCGCATATAGCTAGACTAGCATCGAGAGAGAGAG&#39;,
- &#39;Nicolhas_II_Romanov_Y&#39;: &#39;AAAA-----------AAAA--------------GGGGG-----TTT--&#39;,
- &#39;Alexei_Romanov_Y&#39;: &#39;AAAA---GAT-CCC-AACA-CGGG-----CGC-GGGGG---CGT----&#39;,
- &#39;Anastasia4_son_Y&#39;: &#39;AGCGCATATACGATCGATCAGCTGCATCGACTAGCATCGATACGATCG&#39;,
- &#39;Farmer’s_grandson_Y&#39;: &#39;?????TATACGCGAAACGATCAGCATGGGTATAGCGCGCTAAGCAT??&#39;,
- &#39;Grigori_Rasputin_Y&#39;: &#39;ATATATATACGCGCTACGATCAGCATATATATAGCGCGCTAAGCATCG&#39;}</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
@@ -14565,27 +14488,25 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># mtDNA file</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mtdna_scores_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
-    <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SmpA</span><span class="se">\t</span><span class="s1">SmpB</span><span class="se">\t</span><span class="s1">Id_s</span><span class="se">\t</span><span class="s1">Al_s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">seq_1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_mtdna</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span> <span class="c1"># Get and index, and items from dict.</span>
-        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">key_2</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_mtdna</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span> <span class="c1"># Compare with non-repeating sequences</span>
-                <span class="c1"># Calculate scores and add to file</span>
-                <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span> <span class="o">=</span> <span class="n">score_alignment_identity</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
-                <span class="n">output_file</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="s1">%</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">key_2</span><span class="p">,</span> <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span><span class="p">))</span>
+    <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SmpA</span><span class="se">\t</span><span class="s1">SmpB</span><span class="se">\t</span><span class="s1">Id_s</span><span class="se">\t</span><span class="s1">Al_s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>               <span class="c1"># write out header row</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">seq_1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_mtdna</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>     <span class="c1"># get ID and seq from dictionary</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">key_2</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_mtdna</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span> <span class="c1"># get ID and seq from dictionary</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>                                           <span class="c1"># compare two non-repeating sequences</span>
+                <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span> <span class="o">=</span> <span class="n">score_alignment_identity</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span> <span class="c1"># get identity and alignment scores</span>
+                <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="s1">%</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">key_2</span><span class="p">,</span> <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span><span class="p">))</span> <span class="c1"># write out data</span>
 <span class="c1"># Y chromosome file</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ychr_scores_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
-    <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SmpA</span><span class="se">\t</span><span class="s1">SmpB</span><span class="se">\t</span><span class="s1">Id_s</span><span class="se">\t</span><span class="s1">Al_s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">seq_1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_ychr</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span> <span class="c1"># Get and index, and items from dict.</span>
-        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">key_2</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_ychr</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span> <span class="c1"># Compare with non-repeating sequences</span>
-                <span class="c1"># Calculate scores and add to file</span>
-                <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span> <span class="o">=</span> <span class="n">score_alignment_identity</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
-                <span class="n">output_file</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="s1">%</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">key_2</span><span class="p">,</span> <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span><span class="p">))</span>
+    <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;SmpA</span><span class="se">\t</span><span class="s1">SmpB</span><span class="se">\t</span><span class="s1">Id_s</span><span class="se">\t</span><span class="s1">Al_s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>               <span class="c1"># write out header row</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">seq_1</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_ychr</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>     <span class="c1"># get ID and seq from dictionary</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">key_2</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fasta_dict_ychr</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span> <span class="c1"># get ID and seq from dictionary</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">j</span><span class="p">:</span>                                           <span class="c1"># compare two non-repeating sequences</span>
+                <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span> <span class="o">=</span> <span class="n">score_alignment_identity</span><span class="p">(</span><span class="n">seq_1</span><span class="p">,</span> <span class="n">seq_2</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span> <span class="c1"># get identity and alignment scores</span>
+                <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="s1">%</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key_1</span><span class="p">,</span> <span class="n">key_2</span><span class="p">,</span> <span class="n">iden</span><span class="p">,</span> <span class="n">score_seq</span><span class="p">))</span> <span class="c1"># write out data</span>
 </pre></div>
 
      </div>
@@ -14601,8 +14522,8 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The second part of our analysis consists of building similarity matrices based on pairwise alignment scores and percentages of identity between all of the DNA sequences involved. These scores have been obtained during the first part of the analysis and are stored in two .txt files: MSAmtdna.txt and MSAYchr.txt, containing the results for the alignment of the mtDNA fragments and the Y chromosome fragments respectively.</p>
-<p>We designed a Python script capable of using the previously mentioned input files in order to output files containing scoring matrices for both the alignment scores and the identity percentages.  The identity percentages are kept as they are in the matrices as a result of the fact that they range between 0- 100% and are easy to interpret. The alignment scores were normalized and converted to values ranging from 0 to 100, where 100 is the normalized score for the highest scoring alignment of sequences.</p>
+<p>The second part of our analysis consists of building similarity matrices based on pairwise alignment scores and percentages of identity between all of the DNA sequences involved. These scores were obtained during the first part of the analysis and stored in two .txt files: MSAmtdna.txt and MSAYchr.txt, containing the results for the alignment of the mtDNA fragments and the Y chromosome fragments respectively.</p>
+<p>We designed a Python script capable of using the previously mentioned input files in order to write files containing scoring matrices for both the alignment scores and the identity percentages.  The identity percentages are kept as they are in the matrices as a result of the fact that they range between 0- 100% and are easy to interpret. The alignment scores were normalized and converted to values ranging from 0 to 100, where 100 is the normalized score for the highest scoring alignment of sequences.</p>
 
 </div>
 </div>
@@ -14624,7 +14545,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">msa_to_dict</span><span class="p">(</span><span class="n">input_file</span><span class="p">):</span>    <span class="c1">#Function that stores data from the input file into a nested dictionary</span>
@@ -14677,7 +14598,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">make_matrix_file</span><span class="p">(</span><span class="n">msa_matrix</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
@@ -14701,7 +14622,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_most_similar</span><span class="p">(</span><span class="n">msa_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>           <span class="c1">#Function for finding the most similar sequence to a specific sequence</span>
@@ -14731,7 +14652,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">identity_mtdna</span><span class="p">,</span> <span class="n">score_mtdna</span> <span class="o">=</span> <span class="n">msa_to_dict</span><span class="p">(</span><span class="n">mtdna_scores_file</span><span class="p">)</span>  <span class="c1">#Calling the function for the input file; two matrices are returned</span>
@@ -14746,7 +14667,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">make_matrix_file</span><span class="p">(</span><span class="n">identity_mtdna</span><span class="p">,</span> <span class="n">mtdna_id_matrix_file</span><span class="p">)</span>         <span class="c1">#Write the percentage identity matrix to one output file by calling the proper function</span>
@@ -14774,7 +14695,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_clusters</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">cluster_method</span> <span class="o">=</span> <span class="s1">&#39;single&#39;</span><span class="p">):</span>
@@ -14819,7 +14740,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Build the clusters for all 4 matrix files</span>
@@ -14837,13 +14758,13 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Finally, we plotted the clusters for each case using the dendrogram function, adding the labels and changing the orientation to the right. In the original script, all dendrograms are added as subplots of one figure. However, this report includes them as individual plots for readability purposes.</p>
+<p>Finally, we plotted the clusters for each case using the dendrogram function. In the original script, all dendrograms are added as subplots of one figure. However, this report includes them as individual plots for readability purposes.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create dendogram for the Y Chromosome identity matrix</span>
@@ -14888,7 +14809,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create dendogram for the Y Chromosome scoring matrix</span>
@@ -14932,7 +14853,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create dendogram for the mtDNA identity matrix</span>
@@ -14976,7 +14897,7 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create dendogram for the mtDNA scoring matrix</span>
@@ -15021,6 +14942,145 @@ The main dictionary is redundant, in the sense that it contains each pairwise al
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Analysis">Analysis<a class="anchor-link" href="#Analysis">&#182;</a></h2>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The analysis of the Y chromosome sequences reveals that the farmer’s grandson is very closely related paternally to Grigori Rasputin, the two sequences having an identity percentage of 75% and being by far the most similar sequences in the Y chromosome analysis. The testimonies take note of the grandson’s and Rasputin’s close physical resemblance. Moreover, the farmer’s daughter appears to be extremely distressed when Rasputin’s name is mentioned. Therefore, we conclude that Grigori Rasputin is in fact the father of the farmer’s grandson.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_most_similar</span><span class="p">(</span><span class="n">identity_ychr</span><span class="p">,</span> <span class="s2">&quot;Farmer’s_grandson_Y&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(&#39;Grigori_Rasputin_Y&#39;, 75.0)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The analysis of the mitochondrial DNA alignments and the corresponding dendrogram showed a strong degree of similarity between Anastasia 4’s son and the suspected body of Anastasia Romanov, as shown in fig. 3 and 4. Provided that the real Anastasia Romanov is still alive, the suspected body does not belong to her. More research needs to be done, but our results tend to suggest that Anastasia 4 planted evidence that would be closely related to her son (perhaps even her own DNA, in which case her reticence to provide a DNA sample can be explained) to bias the analysis towards proving that she is the real Anastasia Romanov.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">get_most_similar</span><span class="p">(</span><span class="n">identity_mtdna</span><span class="p">,</span> <span class="s2">&quot;Anastasia4_son&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(&#39;Suspected_Anastasia&#39;, 69.2)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>It is also worth noting that the resulting dendrograms contain multiple false positive and negative results. For instance, Nicholas II Romanov and his son, Alexei, appear to not be closely related based on the Y chromosome analysis. It is extremely likely that this is the case because of the poor quality of some of the DNA sequences.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Nicholas_II_Romanov</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fasta_dict_mtdna</span><span class="p">[</span><span class="s1">&#39;Nicholas_II_Romanov&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Alexei_Romanov</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fasta_dict_mtdna</span><span class="p">[</span><span class="s1">&#39;Alexei_Romanov&#39;</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Nicholas_II_Romanov
+ -----GGGG-----AAA---------
+Alexei_Romanov
+ ACC???AGCTAGCT----TAGCTTTT
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>The highlight of our analysis is represented by our conclusions regarding the fate of the real Anastasia Romanov. Our mtDNA dendrograms reveal the positioning of the farmer’s grandson in the same cluster as members of the royal family (fig. 3 and fig. 4). Most notably, the farmer’s grandson is closely related to good quality mtDNA samples (i.e. those of Princess Irene and Prince Fred); due to the poor quality of the samples prelevated from the deceased royal family members, false positive and false negative results are common. Considering that the farmer’s grandson is maternally related to the royal family, we infer that his mother, the farmer’s daughter, is related to the royal family as well. Moreover, our overall conclusion, based on the data that was available to us, is that the farmer’s daughter is in fact the real Anastasia Romanov.</p>
+<p>To answer the question of what happened to the real Anastasia, the farmer’s testimony reveals that each member of the royal family was shot once in order to be executed. However, one shot is not guaranteed to be fatal and Anastasia was harmed, but not killed. The farmer admits to having been paid to dispose of the bodies, and, because Anastasia was still alive, he took her in and raised her in secret as his own daughter.
+One challenge that we encountered in formulating our conclusion is the mismatch of the farmer’s daughter age and physical characteristics to those of the supposed real Anastasia Romanov. The farmer’s daughter is 36, older than the real Anastasia is believed to be. Moreover the eye and hair color do not match. These issues were addressed in a plausible manner by Anastasia 5, who mentioned that an explanation for a different age is a mistake in the birth certificate; she also explains the difference in eye and hair color as an aesthetic choice of the painters of the royal family portraits. As a result, we conclude that the farmer’s daughter is the most plausible candidate to be the real Anastasia Romanov.</p>
+
 </div>
 </div>
 </body>
